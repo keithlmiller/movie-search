@@ -15,13 +15,14 @@ import MovieResult from "../../components/Movie/MovieListItem";
 
 function SearchMovies({
   savedMoviesById,
-  searchTerm: prevSearch,
+  searchTerm: prevSearchTerm,
   searchConfig,
+  searchedMovies,
   setSavedSearchTerm,
+  setSearchedMovies,
 }) {
   const [searchTerm, setSearchTerm] = useState(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
-  const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -35,7 +36,7 @@ function SearchMovies({
     (async () => {
       try {
         const data = await searchMovies(searchTerm, page + 1);
-        setResults([...results, ...data.results]);
+        setSearchedMovies([...searchedMovies, ...data.results]);
       } catch (e) {
         console.error(e);
       }
@@ -53,7 +54,7 @@ function SearchMovies({
       } else if (searchTerm !== null) {
         setSearchParams();
         setSavedSearchTerm(searchTerm);
-        setResults([]);
+        setSearchedMovies([]);
         setTotalPages(0);
       }
       setPage(1);
@@ -72,20 +73,23 @@ function SearchMovies({
   }, [searchTerm]);
 
   useEffect(() => {
-    if (results?.length && searchTerm && !searchTerm.length) {
-      setResults([]);
+    if (searchedMovies?.length && searchTerm && !searchTerm.length) {
+      // setResults([]);
+      setSearchedMovies([]);
       setTotalPages(0);
     }
-  }, [results, searchTerm]);
+  }, [searchedMovies, searchTerm]);
 
   useEffect(() => {
-    if (searchTerm === null && prevSearch?.length) {
-      setSearchTerm(prevSearch);
+    if (searchTerm === null && prevSearchTerm?.length) {
+      setSearchTerm(prevSearchTerm);
     }
-  }, [searchTerm, prevSearch]);
+  }, [searchTerm, prevSearchTerm]);
 
   useEffect(() => {
     const query = searchParams.get("query");
+    if (query === prevSearchTerm && searchedMovies.length) return;
+
     if (query?.length) {
       (async () => {
         try {
@@ -94,10 +98,10 @@ function SearchMovies({
           setLoadingSearch(false);
 
           setTotalPages(data.total_pages);
-          setResults(data.results);
+          setSearchedMovies(data.results);
         } catch (e) {
           setTotalPages(0);
-          setResults([]);
+          setSearchedMovies([]);
 
           // TODO: handle this with visible error message
           console.error(e);
@@ -124,7 +128,7 @@ function SearchMovies({
           <Spinner />
         ) : (
           <SimpleGrid columns={2} spacing={10}>
-            {results?.map((result) => (
+            {searchedMovies?.map((result) => (
               <MovieResult
                 key={result.id}
                 movie={result}

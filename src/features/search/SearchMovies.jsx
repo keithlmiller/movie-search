@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { Box, Button, Input, SimpleGrid, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Input,
+  SimpleGrid,
+  Spinner,
+} from "@chakra-ui/react";
 import { searchMovies } from "../../api/searchMovies";
 import { setSavedSearchTerm, setSearchedMovies } from "../../store/actions";
 import {
@@ -116,6 +123,9 @@ function SearchMovies({
 
   return (
     <Box>
+      <Heading as="h2" size="lg" pb={4}>
+        Find Movies to Save
+      </Heading>
       <Box mb={5}>
         <Input
           size="lg"

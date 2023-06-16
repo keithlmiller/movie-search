@@ -7,17 +7,21 @@ import {
   Link as RouterLink,
 } from "react-router-dom";
 import { connect } from "react-redux";
-import { Box, Link, Tabs, Tab, TabList } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Link,
+  Spinner,
+  Tabs,
+  Tab,
+  TabList,
+} from "@chakra-ui/react";
 import SavedMovies from "./features/savedMovies/SavedMovies";
 import SearchMovies from "./features/search/SearchMovies";
 import { getConfig } from "./api/searchMovies";
 import { fetchSavedMovies } from "./api/saveMovies";
 import { setSearchConfig } from "./store/actions";
 import "./App.scss";
-
-function NoMatch() {
-  return <h3>Page Does not Exist</h3>;
-}
 
 function App() {
   return (
@@ -30,6 +34,10 @@ function App() {
       </Route>
     </Routes>
   );
+}
+
+function NoMatch() {
+  return <h3>Page Does not Exist</h3>;
 }
 
 function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
@@ -64,17 +72,28 @@ function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
     }
   }, [location.pathname]);
 
-  if (tabIndex === null || loadingConfig) return <>Loading</>;
+  if (tabIndex === null || loadingConfig) return <Spinner />;
 
   return (
     <Box minW="xl" minHeight="100vh">
+      <Heading
+        pt={15}
+        as="h1"
+        size="xl"
+        pb={4}
+        mt={4}
+        fontStyle="italic"
+        textDecor="overline"
+      >
+        Savr
+      </Heading>
       <Tabs
         align="center"
         index={tabIndex}
         onChange={handleTabsChange}
         isFitted
       >
-        <Box maxW="lg" mx="auto" m={10}>
+        <Box maxW="lg" mx="auto" mb={10}>
           <TabList>
             <Link
               _hover={{

@@ -10,7 +10,9 @@ import Movie from "../../components/Movie";
 function SavedMovies({ savedMoviesById, savedMovies, searchConfig }) {
   return (
     <>
-      <Heading>Saved Movies</Heading>
+      <Heading as="h2" size="lg" pb={4}>
+        Saved Movies
+      </Heading>
       <div>
         <SimpleGrid columns={2} spacing={10}>
           {savedMovies?.map((movieId) => {

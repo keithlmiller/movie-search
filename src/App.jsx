@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import {
   Routes,
@@ -7,6 +8,7 @@ import {
   Link as RouterLink,
 } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import {
   Box,
   Heading,
@@ -123,6 +125,11 @@ function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
     </Box>
   );
 }
+
+Layout.propTypes = {
+  fetchSavedMovies: PropTypes.func.isRequired,
+  setBaseSearchConfig: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = () => ({});
 

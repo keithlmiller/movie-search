@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import {
   Box,
   Button,
@@ -94,7 +95,7 @@ function SearchMovies({
 
   useEffect(() => {
     const query = searchParams.get("query");
-    if (query === prevSearchTerm && searchedMovies.length) return;
+    if (query === prevSearchTerm && searchedMovies?.length) return;
 
     if (query?.length) {
       // if initial page loads with query, set the searchTerm to fill in box
@@ -167,6 +168,21 @@ function SearchMovies({
     </Box>
   );
 }
+
+SearchMovies.propTypes = {
+  savedMoviesById: PropTypes.object.isRequired,
+  savedMovies: PropTypes.arrayOf(PropTypes.number).isRequired,
+  searchTerm: PropTypes.string,
+  searchConfig: PropTypes.shape({
+    images: PropTypes.shape({
+      poster_sizes: PropTypes.arrayOf(PropTypes.string),
+      base_url: PropTypes.string,
+    }),
+  }),
+  searchedMovies: PropTypes.arrayOf(PropTypes.number).isRequired,
+  setSavedSearchTerm: PropTypes.func.isRequired,
+  setSearchedMovies: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   savedMoviesById: selectSavedMoviesById(state),

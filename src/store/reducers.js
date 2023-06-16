@@ -11,7 +11,7 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_SAVED_MOVIE":
+    case "ADD_SAVED_MOVIE": {
       const movie = action.payload;
 
       return {
@@ -24,7 +24,9 @@ const rootReducer = (state = initialState, action) => {
           allIds: [...state.savedMovies.allIds, movie.id],
         },
       };
-    case "REMOVE_SAVED_MOVIE":
+    }
+
+    case "REMOVE_SAVED_MOVIE": {
       const movieId = action.payload;
       const updatedMoviesById = { ...state.savedMovies.byId };
 
@@ -39,7 +41,9 @@ const rootReducer = (state = initialState, action) => {
           allIds: updatedMoviesAllIds,
         },
       };
-    case "FETCH_ALL_SAVED_MOVIES":
+    }
+
+    case "FETCH_ALL_SAVED_MOVIES": {
       const movies = action.payload;
 
       // consider using normalizr here
@@ -56,6 +60,8 @@ const rootReducer = (state = initialState, action) => {
           allIds: fetchedMoviesIds,
         },
       };
+    }
+
     case "SET_SEARCH_CONFIG":
       return {
         ...state,

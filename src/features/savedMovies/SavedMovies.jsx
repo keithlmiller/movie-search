@@ -1,4 +1,6 @@
+import React from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { Heading, SimpleGrid } from "@chakra-ui/react";
 import {
   selectSavedMoviesById,
@@ -40,6 +42,17 @@ function SavedMovies({ savedMoviesById, savedMovies, searchConfig }) {
     </>
   );
 }
+
+SavedMovies.propTypes = {
+  savedMoviesById: PropTypes.object.isRequired,
+  savedMovies: PropTypes.arrayOf(PropTypes.number).isRequired,
+  searchConfig: PropTypes.shape({
+    images: PropTypes.shape({
+      poster_sizes: PropTypes.arrayOf(PropTypes.string),
+      base_url: PropTypes.string,
+    }),
+  }),
+};
 
 const mapStateToProps = (state) => ({
   savedMoviesById: selectSavedMoviesById(state),

@@ -1,4 +1,6 @@
+import React from "react";
 import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 import {
   Button,
   Card,
@@ -15,9 +17,10 @@ import { saveMovie, removeMovie } from "../../api/saveMovies";
 
 function Movie({ movie, baseUrl, imageSize, isSaved }) {
   const {
+    id,
     title,
     release_date: year,
-    overview: description,
+    // overview: description,
     vote_average,
     vote_count: reviewCount,
     poster_path: imgSrc,
@@ -26,7 +29,7 @@ function Movie({ movie, baseUrl, imageSize, isSaved }) {
   const dispatch = useDispatch();
   const handleSaveClick = () => {
     if (isSaved) {
-      dispatch(removeMovie(movie.id));
+      dispatch(removeMovie(id));
     } else {
       dispatch(saveMovie(movie));
     }
@@ -79,5 +82,20 @@ function Movie({ movie, baseUrl, imageSize, isSaved }) {
     </div>
   );
 }
+
+Movie.propTypes = {
+  movie: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    release_date: PropTypes.string,
+    overview: PropTypes.string,
+    vote_average: PropTypes.string,
+    vote_count: PropTypes.string,
+    poster_path: PropTypes.string,
+  }).isRequired,
+  baseUrl: PropTypes.string,
+  imageSize: PropTypes.string,
+  isSaved: PropTypes.boolean,
+};
 
 export default Movie;

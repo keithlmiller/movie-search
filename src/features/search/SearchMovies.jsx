@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { connect } from "react-redux";
 import { Input, SimpleGrid } from "@chakra-ui/react";
-import { searchMovies } from "../../utils/api";
+import { searchMovies } from "../../api/searchMovies";
 import { setSavedSearchTerm, setSearchedMovies } from "../../store/actions";
 import {
   selectSavedMoviesById,
@@ -11,7 +11,7 @@ import {
   selectSearchTerm,
   selectSearchedMovies,
 } from "../../store/selectors";
-import MovieResult from "./components/Movie/MovieListItem";
+import MovieResult from "../../components/Movie/MovieListItem";
 
 function SearchMovies({
   savedMoviesById,
@@ -101,8 +101,8 @@ function SearchMovies({
   }
 
   return (
-    <div className="movie-search">
-      <header className="search-bar">
+    <div>
+      <header>
         <Input
           size="lg"
           type="text"
@@ -113,7 +113,7 @@ function SearchMovies({
         />
       </header>
 
-      <div className="results">
+      <div>
         <SimpleGrid columns={2} spacing={10}>
           {results?.map((result) => (
             <MovieResult
@@ -130,10 +130,6 @@ function SearchMovies({
           ))}
         </SimpleGrid>
 
-        {/* 
-          pagination for MVP
-          research how to handle performance on infinite scroll
-        */}
         {totalPages > 1 && (
           <button className="btn" onClick={handlePageChange}>
             See More

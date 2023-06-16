@@ -41,6 +41,23 @@ const rootReducer = (state = initialState, action) => {
           allIds: updatedMoviesAllIds,
         },
       };
+    case "FETCH_ALL_SAVED_MOVIES":
+      const movies = action.payload;
+
+      // consider using normalizr here
+      const fetchedwMoviesById = movies?.reduce((acc, curr) => {
+        acc[curr.id] = curr;
+        return acc;
+      }, {});
+      const fetchedMoviesIds = movies?.map((movie) => movie.id);
+
+      return {
+        ...state,
+        savedMovies: {
+          byId: fetchedwMoviesById,
+          allIds: fetchedMoviesIds,
+        },
+      };
     case "SET_SEARCH_CONFIG":
       return {
         ...state,

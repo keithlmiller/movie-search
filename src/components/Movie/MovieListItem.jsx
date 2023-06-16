@@ -10,7 +10,7 @@ import {
   Stack,
   Divider,
 } from "@chakra-ui/react";
-import { addSavedMovie, removeSavedMovie } from "../../../../store/actions";
+import { saveMovie, removeMovie } from "../../api/saveMovies";
 
 function Movie({ movie, baseUrl, imageSize, isSaved }) {
   const {
@@ -27,9 +27,9 @@ function Movie({ movie, baseUrl, imageSize, isSaved }) {
   const dispatch = useDispatch();
   const handleSaveClick = () => {
     if (isSaved) {
-      dispatch(removeSavedMovie(movie.id));
+      dispatch(removeMovie(movie.id));
     } else {
-      dispatch(addSavedMovie(movie));
+      dispatch(saveMovie(movie));
     }
   };
 

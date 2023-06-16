@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation, Outlet, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Box, Tabs, Tab, TabList, TabPanel, TabPanels } from "@chakra-ui/react";
+import { Box, Tabs, Tab, TabList } from "@chakra-ui/react";
 import SavedMovies from "./features/savedMovies/SavedMovies";
 import SearchMovies from "./features/search/SearchMovies";
-import { getConfig } from "./utils/api";
+import { getConfig } from "./api/searchMovies";
+import { fetchSavedMovies } from "./api/saveMovies";
 import { setSearchConfig } from "./store/actions";
 import "./App.scss";
 
@@ -25,7 +26,7 @@ function App() {
   );
 }
 
-function Layout({ setBaseSearchConfig }) {
+function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
   const location = useLocation();
   const [tabIndex, setTabIndex] = useState(null);
   const [loadingConfig, setLoadingConfig] = useState();
@@ -41,6 +42,8 @@ function Layout({ setBaseSearchConfig }) {
       const config = await getConfig();
       setBaseSearchConfig(config);
       setLoadingConfig(false);
+
+      await fetchSavedMovies();
     })();
   }, []);
 
@@ -56,8 +59,13 @@ function Layout({ setBaseSearchConfig }) {
 
   return (
     <div>
-      <Tabs align="center" index={tabIndex} onChange={handleTabsChange}>
-        <Box maxW="sm" mx="auto" mt={10}>
+      <Tabs
+        align="center"
+        index={tabIndex}
+        onChange={handleTabsChange}
+        isFitted
+      >
+        <Box maxW="lg" mx="auto" mt={10}>
           <TabList>
             <Tab>
               <Link to="/search">Search</Link>
@@ -76,6 +84,7 @@ function Layout({ setBaseSearchConfig }) {
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
+  fetchSavedMovies,
   setBaseSearchConfig: setSearchConfig,
 };
 

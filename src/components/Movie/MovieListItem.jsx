@@ -85,17 +85,17 @@ function Movie({ movie, baseUrl, imageSize, isSaved }) {
 
 Movie.propTypes = {
   movie: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     title: PropTypes.string,
     release_date: PropTypes.string,
     overview: PropTypes.string,
-    vote_average: PropTypes.string,
-    vote_count: PropTypes.string,
+    vote_average: PropTypes.number,
+    vote_count: PropTypes.number,
     poster_path: PropTypes.string,
   }).isRequired,
   baseUrl: PropTypes.string,
   imageSize: PropTypes.string,
-  isSaved: PropTypes.boolean,
+  isSaved: PropTypes.bool,
 };
 
 export default Movie;

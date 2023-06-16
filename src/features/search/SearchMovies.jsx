@@ -179,7 +179,7 @@ SearchMovies.propTypes = {
       base_url: PropTypes.string,
     }),
   }),
-  searchedMovies: PropTypes.arrayOf(PropTypes.number).isRequired,
+  searchedMovies: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSavedSearchTerm: PropTypes.func.isRequired,
   setSearchedMovies: PropTypes.func.isRequired,
 };

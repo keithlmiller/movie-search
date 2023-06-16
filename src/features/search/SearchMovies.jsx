@@ -74,7 +74,6 @@ function SearchMovies({
 
   useEffect(() => {
     if (searchedMovies?.length && searchTerm && !searchTerm.length) {
-      // setResults([]);
       setSearchedMovies([]);
       setTotalPages(0);
     }
@@ -91,6 +90,11 @@ function SearchMovies({
     if (query === prevSearchTerm && searchedMovies.length) return;
 
     if (query?.length) {
+      // if initial page loads with query, set the searchTerm to fill in box
+      if (searchTerm === null) {
+        setSearchTerm(query);
+      }
+
       (async () => {
         try {
           setLoadingSearch(true);

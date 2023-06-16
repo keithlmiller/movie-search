@@ -13,7 +13,6 @@ const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_SAVED_MOVIE":
       const movie = action.payload;
-      console.log("ADD_SAVED_MOVIE movie", movie);
 
       return {
         ...state,
@@ -29,7 +28,6 @@ const rootReducer = (state = initialState, action) => {
       const movieId = action.payload;
       const updatedMoviesById = { ...state.savedMovies.byId };
 
-      // Remove the movie from the byId object
       delete updatedMoviesById[movieId];
 
       const updatedMoviesAllIds = [...Object.keys(updatedMoviesById)];

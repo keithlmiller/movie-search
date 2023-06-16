@@ -4,25 +4,24 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Divider,
+  Flex,
   Heading,
   Text,
   Image,
   Stack,
-  Divider,
 } from "@chakra-ui/react";
 import { saveMovie, removeMovie } from "../../api/saveMovies";
 
 function Movie({ movie, baseUrl, imageSize, isSaved }) {
   const {
-    original_title: title,
+    title,
     release_date: year,
     overview: description,
     vote_average,
     vote_count: reviewCount,
     poster_path: imgSrc,
   } = movie;
-
-  const reviewAvg = Math.round(vote_average) / 2;
 
   const dispatch = useDispatch();
   const handleSaveClick = () => {
@@ -33,32 +32,40 @@ function Movie({ movie, baseUrl, imageSize, isSaved }) {
     }
   };
 
+  const reviewAvg = Math.round(vote_average) / 2;
+  let releaseDate = new Date(year).getFullYear();
+
   return (
     <div className="movie">
       <Card maxW="sm">
         <CardBody>
           {baseUrl && imageSize && imgSrc ? (
-            <Image
-              src={`${baseUrl}${imageSize}${imgSrc}`}
-              alt="Green double couch with wooden legs"
-              borderRadius="lg"
-            />
+            <Flex justify="center">
+              <Image
+                src={`${baseUrl}${imageSize}${imgSrc}`}
+                alt={title}
+                borderRadius="lg"
+              />
+            </Flex>
           ) : null}
 
-          <Stack align="flex-start" mt="6" spacing="3">
+          <Stack align="flex-start" mt={5} spacing={3}>
             <Heading size="md">{title}</Heading>
             {/* <Text>{description}</Text> */}
-            <Text color="blue.600" fontSize="xl">
-              {year}
-            </Text>
-            <Text color="blue.600" fontSize="xl">
-              <span className="stars">{reviewAvg}/5 stars </span>
-              <span className="reviewCount">{reviewCount} reviews</span>
-            </Text>
+
+            {!isNaN(releaseDate) && (
+              <Text fontSize="lg">
+                Released: {new Date(year).getFullYear()}
+              </Text>
+            )}
+            <Flex justify="space-between" width="100%" mb={5}>
+              <Text>{reviewAvg}/5 stars </Text>
+              <Text>{reviewCount} reviews</Text>
+            </Flex>
           </Stack>
 
           <Divider />
-          <CardFooter>
+          <CardFooter justify="flex-end" px={0} pb={0}>
             <Button
               colorScheme="teal"
               variant={isSaved ? "outline" : "solid"}

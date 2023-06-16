@@ -8,8 +8,6 @@ import {
 import Movie from "../../components/Movie";
 
 function SavedMovies({ savedMoviesById, savedMovies, searchConfig }) {
-  console.log("SavedMovies savedMoviesById", savedMoviesById);
-  console.log("SavedMovies savedMovies", savedMovies);
   return (
     <>
       <Heading>Saved Movies</Heading>
@@ -17,7 +15,6 @@ function SavedMovies({ savedMoviesById, savedMovies, searchConfig }) {
         <SimpleGrid columns={2} spacing={10}>
           {savedMovies?.map((movieId) => {
             const movie = savedMoviesById[movieId];
-            console.log("movie", movie);
             if (movie) {
               return (
                 <Movie

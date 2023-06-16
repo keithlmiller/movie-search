@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { Input, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, Input, SimpleGrid, Spinner } from "@chakra-ui/react";
 import { searchMovies } from "../../api/searchMovies";
 import { setSavedSearchTerm, setSearchedMovies } from "../../store/actions";
 import {
@@ -20,7 +20,7 @@ function SearchMovies({
   setSavedSearchTerm,
 }) {
   const [searchTerm, setSearchTerm] = useState(null);
-
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -32,9 +32,14 @@ function SearchMovies({
   };
 
   const handlePageChange = () => {
-    searchMovies(searchTerm, page + 1).then((data) => {
-      setResults([...results, ...data.results]);
-    });
+    (async () => {
+      try {
+        const data = await searchMovies(searchTerm, page + 1);
+        setResults([...results, ...data.results]);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
     setPage(page + 1);
   };
 
@@ -45,8 +50,9 @@ function SearchMovies({
       if (searchTerm?.length) {
         setSearchParams({ query: searchTerm });
         setSavedSearchTerm(searchTerm);
-      } else if (searchTerm) {
+      } else if (searchTerm !== null) {
         setSearchParams();
+        setSavedSearchTerm(searchTerm);
         setResults([]);
         setTotalPages(0);
       }
@@ -81,28 +87,28 @@ function SearchMovies({
   useEffect(() => {
     const query = searchParams.get("query");
     if (query?.length) {
-      try {
-        searchMovies(query, 1).then((data) => {
+      (async () => {
+        try {
+          setLoadingSearch(true);
+          const data = await searchMovies(query, 1);
+          setLoadingSearch(false);
+
           setTotalPages(data.total_pages);
           setResults(data.results);
-        });
-      } catch (e) {
-        setTotalPages(0);
-        setResults([]);
+        } catch (e) {
+          setTotalPages(0);
+          setResults([]);
 
-        // TODO: handle this with visible error message
-        console.log(e);
-      }
+          // TODO: handle this with visible error message
+          console.error(e);
+        }
+      })();
     }
   }, [searchParams]);
 
-  if (!Object.keys(searchConfig)) {
-    return <>Loading Config</>;
-  }
-
   return (
-    <div>
-      <header>
+    <Box>
+      <Box mb={5}>
         <Input
           size="lg"
           type="text"
@@ -111,32 +117,36 @@ function SearchMovies({
           value={searchTerm || ""}
           alt="Type to seach by movie title"
         />
-      </header>
+      </Box>
 
-      <div>
-        <SimpleGrid columns={2} spacing={10}>
-          {results?.map((result) => (
-            <MovieResult
-              key={result.id}
-              movie={result}
-              isSaved={Boolean(savedMoviesById[result.id])}
-              baseUrl={searchConfig.images?.base_url}
-              imageSize={
-                searchConfig.images?.poster_sizes[2]
-                  ? searchConfig.images?.poster_sizes[2]
-                  : searchConfig.images?.poster_sizes[0]
-              }
-            />
-          ))}
-        </SimpleGrid>
+      <Box>
+        {loadingSearch ? (
+          <Spinner />
+        ) : (
+          <SimpleGrid columns={2} spacing={10}>
+            {results?.map((result) => (
+              <MovieResult
+                key={result.id}
+                movie={result}
+                isSaved={Boolean(savedMoviesById[result.id])}
+                baseUrl={searchConfig.images?.base_url}
+                imageSize={
+                  searchConfig.images?.poster_sizes[2]
+                    ? searchConfig.images?.poster_sizes[2]
+                    : searchConfig.images?.poster_sizes[0]
+                }
+              />
+            ))}
+          </SimpleGrid>
+        )}
 
         {totalPages > 1 && (
-          <button className="btn" onClick={handlePageChange}>
+          <Button m={5} onClick={handlePageChange}>
             See More
-          </button>
+          </Button>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

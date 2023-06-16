@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useLocation, Outlet, Link } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Outlet,
+  Link as RouterLink,
+} from "react-router-dom";
 import { connect } from "react-redux";
-import { Box, Tabs, Tab, TabList } from "@chakra-ui/react";
+import { Box, Link, Tabs, Tab, TabList } from "@chakra-ui/react";
 import SavedMovies from "./features/savedMovies/SavedMovies";
 import SearchMovies from "./features/search/SearchMovies";
 import { getConfig } from "./api/searchMovies";
@@ -37,13 +43,16 @@ function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
 
   useEffect(() => {
     (async () => {
-      setLoadingConfig(true);
+      try {
+        setLoadingConfig(true);
+        const config = await getConfig();
+        setBaseSearchConfig(config);
+        setLoadingConfig(false);
 
-      const config = await getConfig();
-      setBaseSearchConfig(config);
-      setLoadingConfig(false);
-
-      await fetchSavedMovies();
+        await fetchSavedMovies();
+      } catch (e) {
+        console.error(e);
+      }
     })();
   }, []);
 
@@ -58,26 +67,41 @@ function Layout({ fetchSavedMovies, setBaseSearchConfig }) {
   if (tabIndex === null || loadingConfig) return <>Loading</>;
 
   return (
-    <div>
+    <Box minW="xl" minHeight="100vh">
       <Tabs
         align="center"
         index={tabIndex}
         onChange={handleTabsChange}
         isFitted
       >
-        <Box maxW="lg" mx="auto" mt={10}>
+        <Box maxW="lg" mx="auto" m={10}>
           <TabList>
-            <Tab>
-              <Link to="/search">Search</Link>
-            </Tab>
-            <Tab>
-              <Link to="/saved">Saved</Link>
-            </Tab>
+            <Link
+              _hover={{
+                textDecoration: "none",
+              }}
+              width="100%"
+              as={RouterLink}
+              to="/search"
+            >
+              <Tab width="100%">Search</Tab>
+            </Link>
+
+            <Link
+              _hover={{
+                textDecoration: "none",
+              }}
+              width="100%"
+              as={RouterLink}
+              to="/saved"
+            >
+              <Tab width="100%">Saved</Tab>
+            </Link>
           </TabList>
         </Box>
       </Tabs>
       <Outlet />
-    </div>
+    </Box>
   );
 }
 
